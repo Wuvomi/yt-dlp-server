@@ -19,4 +19,10 @@
 
 支持使用快捷指令从iPhone/iPad直接推送进行下载，配合油猴脚本+Stay一键推送食用更香！
 
+get提交方式: http://127.0.0.1:5000/download?url=https://www.example.com/video
+
+post提交方式: http://127.0.0.1:5000/download
+使用表单，url=https://www.example.com/video
+
+
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
