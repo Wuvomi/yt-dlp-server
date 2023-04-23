@@ -17,6 +17,6 @@
 
 示例：`python yt_dlp_server.py -l 0.0.0.0 -p 5000`
 
-支持使用快捷指令从iPhone/iPad直接推送进行下载，配合油猴脚本push.user.js+Stay插件食用更香！
+支持使用快捷指令从iPhone/iPad直接推送进行下载，配合油猴脚本+Stay一键推送食用更香！
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
