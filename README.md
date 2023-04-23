@@ -1,6 +1,6 @@
 # 0.6版
 
-注意：需要python 3.6及以上版本
+注意：需要python 3.6及以上版本，所需库Flask Flask-SocketIO yt-dlp eventlet
 
 - 支持命令行和web页面下载
 - 注释和帮助信息以中文显示
