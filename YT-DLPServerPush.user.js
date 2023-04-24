@@ -6,6 +6,7 @@
 // @author       Wuvomi & GPT-4
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
+// @updateURL    https://raw.githubusercontent.com/Wuvomi/yt-dlp-server/main/YT-DLPServerPush.user.js
 // ==/UserScript==
 
 (function () {
