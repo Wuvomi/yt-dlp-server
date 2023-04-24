@@ -4,8 +4,19 @@ import argparse
 import subprocess
 import threading
 import queue
+import logging
+import time
 from flask import Flask, render_template_string, request
 from flask_socketio import SocketIO
+
+def setup_logging():
+    push_logger = logging.getLogger('push')
+    push_logger.setLevel(logging.INFO)
+    push_handler = logging.FileHandler('yt_dlp_push.log', encoding='utf-8')
+    push_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+    push_logger.addHandler(push_handler)
+    
+    return push_logger
 
 if sys.version_info < (3, 6):
     print("错误：您当前使用的 Python 版本低于 3.6。")
@@ -19,6 +30,7 @@ if sys.version_info < (3, 6):
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+push_logger = setup_logging()
 
 index_template = '''
 <!doctype html>
@@ -80,28 +92,21 @@ def download_video(url, socketio):
         cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16']
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
-        for line in process.stdout:
-            socketio.emit('output', line.rstrip())
-            print(line.rstrip())
+        for line in iter(process.stdout.readline,            ''):
+            socketio.emit('output', line.strip())
+            print(line.strip())
 
         process.wait()
-        socketio.emit('output', '下载完成。')
-
     except Exception as e:
-        socketio.emit('output', f'发生错误：{e}')
+        print(f"下载出错：{e}")
 
 download_queue = queue.Queue()
 
-def process_download_queue():
+def download_thread(socketio):
     while True:
         url, socketio = download_queue.get()
-        if url is None:
-            break
+        push_logger.info(f"{url}")
         download_video(url, socketio)
-        download_queue.task_done()
-
-download_thread = threading.Thread(target=process_download_queue)
-download_thread.start()
 
 @app.route('/download', methods=['GET', 'POST'])
 def download():
@@ -109,9 +114,13 @@ def download():
     if not url:
         return '需要提供网址', 400
 
+    # 在将下载任务添加到队列之前记录日志
+    push_logger.info(f"{url}")
+    
     # 将下载任务添加到队列，而不是在此处立即下载
     download_queue.put((url, socketio))
     return '下载任务已添加', 200
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -127,7 +136,9 @@ def main():
     print(f"\n当前监听地址：{args.host}")
     print(f"当前监听端口：{args.port}")
 
+    threading.Thread(target=download_thread, args=(socketio,), daemon=True).start()
     socketio.run(app, host=args.host, port=args.port)
 
 if __name__ == '__main__':
     main()
+
