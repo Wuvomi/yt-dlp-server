@@ -1,6 +1,11 @@
 # 0.6版
 
-注意：需要python 3.6及以上版本，所需库Flask Flask-SocketIO yt-dlp eventlet，请使用pip进行安装
+注意！运行环境要求
+- Python 3.6 或更高版本
+- Flask：`pip install Flask`
+- Flask-SocketIO：`pip install Flask-SocketIO`
+- requests：`pip install requests`
+- yt-dlp：`pip install yt-dlp`
 
 - 支持命令行和web页面下载
 - 注释和帮助信息以中文显示
