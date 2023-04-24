@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YT-DLP服务器推送脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  在网页上添加一个悬浮半透明按钮，用于将当前网址POST到指定服务器
 // @author       Wuvomi & GPT-4
 // @match        *://*/*
@@ -63,13 +63,7 @@
                 requestFinished = true;
                 if (response.status === 200) {
                     alert('提交成功！');
-                } else {
-                    alert(`提交失败：${response.status}\n${response.responseText}`);
                 }
-            },
-            onerror: function (error) {
-                requestFinished = true;
-                alert(`提交失败：${error.message}`);
             },
         });
 
