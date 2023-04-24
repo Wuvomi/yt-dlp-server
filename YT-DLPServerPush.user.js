@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         yt-dlp-push
+// @name         YT-DLP服务器推送脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.8
 // @description  在网页上添加一个悬浮半透明按钮，用于将当前网址POST到指定服务器
-// @author       Your Name
+// @author       Wuvomi & GPT-4
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
@@ -13,7 +13,7 @@
 
     // 创建按钮并设置样式
     const btn = document.createElement('button');
-    btn.textContent = '⇡';
+    btn.textContent = '🖕️';
     btn.style.position = 'fixed';
     btn.style.top = '20px';
     btn.style.right = '20px';
@@ -49,6 +49,8 @@
         const serverUrl = 'http://127.0.0.1:5000/download';
         const data = `url=${encodeURIComponent(currentUrl)}`;
 
+        let requestFinished = false;
+
         // 使用GM_xmlhttpRequest发送请求
         GM_xmlhttpRequest({
             method: 'POST',
@@ -58,6 +60,7 @@
             },
             data: data,
             onload: function (response) {
+                requestFinished = true;
                 if (response.status === 200) {
                     alert('提交成功！');
                 } else {
@@ -65,8 +68,16 @@
                 }
             },
             onerror: function (error) {
+                requestFinished = true;
                 alert(`提交失败：${error.message}`);
             },
         });
+
+        // 设置一个超时时间，如果请求在超时时间内没有完成，则提示失败
+        setTimeout(() => {
+            if (!requestFinished) {
+                alert('提交失败：请求超时');
+            }
+        }, 5000); // 超时时间设置为5秒
     });
 })();
