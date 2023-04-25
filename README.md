@@ -1,4 +1,4 @@
-# 0.7版
+# 0.85版
 
 ## 注意！运行环境要求
 - Python 3.6 或更高版本
@@ -16,6 +16,7 @@
 - 在正式代码开始执行前进行 Python 版本检测
 - 默认使用 16 线程进行下载
 - 支持记录推送日志
+- 支持带cookie下载（YouTube频道会员视频）
 
 ## YT-DLP 服务器使用说明
 
@@ -28,7 +29,7 @@
 ### 网络请求
 - get 提交方式：http://127.0.0.1:5000/download?url=https://www.example.com/video
 - post 提交方式：http://127.0.0.1:5000/download
-  使用表单，url=https://www.example.com/video
+  使用表单，url=https://www.example.com/video，cookie=xxx（可选，请把json抓包的头部cookie写入参数，程序会自动转换为Netscape格式并保存至cookies.txt）
 
 ### 运行环境
 请先确保已安装以下依赖：
