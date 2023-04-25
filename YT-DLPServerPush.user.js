@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YT-DLP服务器推送脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.3
 // @description  在网页上添加一个悬浮半透明按钮，用于将当前网址POST到指定服务器
 // @author       Wuvomi & GPT-4
 // @match        *://*/*
@@ -19,7 +19,7 @@
 
     // 创建按钮并设置样式
     const btn = document.createElement('button');
-    btn.textContent = '🖕️';
+    btn.textContent = '👾';
     btn.style.position = 'fixed';
     btn.style.top = '20px';
     btn.style.right = '20px';
@@ -38,6 +38,18 @@
 
     // 将按钮添加到页面中
     document.body.appendChild(btn);
+
+    // 创建遮罩层
+    const mask = document.createElement('div');
+    mask.style.position = 'fixed';
+    mask.style.top = '0';
+    mask.style.right = '0';
+    mask.style.bottom = '0';
+    mask.style.left = '0';
+    mask.style.zIndex = '10000';
+    mask.style.display = 'none';
+    mask.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    document.body.appendChild(mask);
 
     // 添加设置窗口
     const settingsDiv = document.createElement('div');
@@ -79,18 +91,28 @@
     settingsBtn.style.transition = 'opacity 0.3s ease';
     document.body.appendChild(settingsBtn);
 
+
     // 为设置按钮添加点击事件
     settingsBtn.addEventListener('click', () => {
+        mask.style.display = 'block'; // 显示遮罩层
         settingsDiv.style.display = 'block';
     });
 
+  
     // 保存设置并关闭设置窗口
     const saveSettingsBtn = document.getElementById('saveSettings');
     saveSettingsBtn.addEventListener('click', () => {
         serverUrl = document.getElementById('serverUrl').value;
         GM_setValue('serverUrl', serverUrl);
         settingsDiv.style.display = 'none';
+        mask.style.display = 'none'; // 隐藏遮罩层
         alert('设置已保存');
+    });
+
+    // 点击遮罩层关闭设置窗口
+    mask.addEventListener('click', () => {
+        settingsDiv.style.display = 'none';
+        mask.style.display = 'none'; // 隐藏遮罩层
     });
 
     // 添加拖动功能
@@ -109,6 +131,7 @@
         touchMoved = false;
         mouseX = e.touches[0].clientX;
         mouseY = e.touches[0].clientY;
+        e.preventDefault(); // 阻止默认行为，避免页面滚动
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -121,6 +144,7 @@
         if (dragging) {
             touchMoved = true;
             moveButton(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault(); // 阻止默认行为，避免页面滚动
         }
     });
 
@@ -151,6 +175,14 @@
         const currentUrl = window.location.href;
         const data = `url=${encodeURIComponent(currentUrl)}`;
 
+        let requestFinished = false;
+
+        setTimeout(function () {
+            if (!requestFinished) {
+                alert('提交失败：请求超时');
+            }
+        }, 5000);
+
         GM_xmlhttpRequest({
             method: 'POST',
             url: serverUrl,
@@ -159,6 +191,7 @@
             },
             data: data,
             onload: function (response) {
+                requestFinished = true;
                 if (response.status === 200) {
                     alert('提交成功');
                 } else {
@@ -166,10 +199,8 @@
                 }
             },
             onerror: function () {
+                requestFinished = true;
                 alert('提交失败');
-            },
-            ontimeout: function () {
-                alert('提交失败：请求超时');
             },
         });
     });
