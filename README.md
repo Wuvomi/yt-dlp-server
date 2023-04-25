@@ -18,6 +18,10 @@
 
 ## YT-DLP 服务器使用说明
 
+## 文件列表
+- `YT-DLPServerPush.user.js`: 游猴推送脚本
+- `yt_dlp_server.py`: 主程序
+
 ### 命令行参数
 使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 5000`
 
@@ -29,9 +33,5 @@
 - POST 提交方式：`http://127.0.0.1:5000/download`
 
   使用表单，`url=https://www.example.com/video`，`cookie=xxx`（可选，请把 JSON 抓包的头部 Cookie 写入参数，程序会自动转换为 Netscape 格式并保存至 `cookies.txt`）
-
-## 文件列表
-- `YT-DLPServerPush.user.js`: 游猴推送脚本
-- `yt_dlp_server.py`: 主程序
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
