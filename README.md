@@ -40,5 +40,9 @@
 
 - `YT-DLPServerPush.user.js`: 游猴推送脚本
 - `yt_dlp_server.py`: 主程序
+- README.md (项目说明文件)
+- yt_dlp_server.py (主程序)
+- script.js (网页脚本文件)
+
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
