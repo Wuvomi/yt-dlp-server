@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YT-DLP服务器推送脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  在网页上添加一个悬浮半透明按钮，用于将当前网址POST到指定服务器
 // @author       Wuvomi & GPT-4
 // @match        *://*/*
@@ -13,6 +13,7 @@
 
 (function () {
     'use strict';
+    let mouseMovedDistance = 0;
 
     // 获取下载服务器地址，如果不存在则设置默认值
     let serverUrl = GM_getValue('serverUrl', 'http://127.0.0.1:5000/download');
@@ -134,11 +135,17 @@
         e.preventDefault(); // 阻止默认行为，避免页面滚动
     });
 
-    document.addEventListener('mousemove', (e) => {
-        if (dragging) {
-            moveButton(e.clientX, e.clientY);
-        }
-    });
+document.addEventListener('mousemove', (e) => {
+    if (dragging) {
+        const prevMouseX = mouseX;
+        const prevMouseY = mouseY;
+        moveButton(e.clientX, e.clientY);
+        mouseMovedDistance += Math.sqrt(
+            Math.pow(e.clientX - prevMouseX, 2) +
+            Math.pow(e.clientY - prevMouseY, 2)
+        );
+    }
+});
 
     document.addEventListener('touchmove', (e) => {
         if (dragging) {
@@ -148,9 +155,13 @@
         }
     });
 
-    document.addEventListener('mouseup', () => {
-        dragging = false;
-    });
+document.addEventListener('mouseup', () => {
+    if (dragging && mouseMovedDistance <= 5) {
+        btn.dispatchEvent(new MouseEvent('click'));
+    }
+    dragging = false;
+    mouseMovedDistance = 0;
+});
 
     document.addEventListener('touchend', () => {
         dragging = false;
