@@ -30,19 +30,8 @@
 
   使用表单，`url=https://www.example.com/video`，`cookie=xxx`（可选，请把 JSON 抓包的头部 Cookie 写入参数，程序会自动转换为 Netscape 格式并保存至 `cookies.txt`）
 
-### 运行环境
-请先确保已安装以下依赖：
-- Python 3.6 或更高版本
-- Flask: `pip install Flask`
-- Flask-SocketIO: `pip install Flask-SocketIO`
-- requests: `pip install requests`
-- yt-dlp: `pip install yt-dlp`
-
+## 文件列表
 - `YT-DLPServerPush.user.js`: 游猴推送脚本
 - `yt_dlp_server.py`: 主程序
-- README.md (项目说明文件)
-- yt_dlp_server.py (主程序)
-- script.js (网页脚本文件)
-
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
