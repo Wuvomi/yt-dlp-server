@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YT-DLP服务器推送脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      1.0
 // @description  在网页上添加一个悬浮半透明按钮，用于将当前网址POST到指定服务器
 // @author       Wuvomi & GPT-4
 // @match        *://*/*
@@ -33,6 +33,35 @@
 
     // 将按钮添加到页面中
     document.body.appendChild(btn);
+
+    // 添加拖动功能
+    let dragging = false;
+    let mouseX, mouseY;
+
+    btn.addEventListener('mousedown', (e) => {
+        dragging = true;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (dragging) {
+            let deltaX = e.clientX - mouseX;
+            let deltaY = e.clientY - mouseY;
+            let newTop = parseInt(btn.style.top) + deltaY;
+            let newRight = parseInt(btn.style.right) - deltaX;
+
+            btn.style.top = `${newTop}px`;
+            btn.style.right = `${newRight}px`;
+
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        dragging = false;
+    });
 
     // 为按钮添加鼠标悬停事件，使其在悬停时不透明
     btn.addEventListener('mouseover', () => {
