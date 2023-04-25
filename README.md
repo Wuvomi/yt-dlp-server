@@ -1,4 +1,5 @@
- # 0.85版
+# YT-DLP Server 0.85版
+
 ## 注意！运行环境要求
 - Python 3.6 或更高版本
 - Flask: `pip install Flask`
@@ -6,7 +7,11 @@
 - requests: `pip install requests`
 - yt-dlp: `pip install yt-dlp`
 
-## 功能介绍
+## 文件列表
+- `YT-DLPServerPush.user.js`: 游猴推送脚本
+- `yt_dlp_server.py`: 主程序
+
+## yt_dlp_server.py 功能介绍
 - 支持命令行和 web 页面下载
 - 注释和帮助信息以中文显示
 - 支持使用 GET 提交网址
@@ -17,9 +22,9 @@
 - 支持记录推送日志
 - 支持带 Cookie 下载（YouTube 频道会员视频）
 
-## 文件列表
-- `YT-DLPServerPush.user.js`: 游猴推送脚本
-- `yt_dlp_server.py`: 主程序
+## YT-DLPServerPush.user.js 功能介绍（1.3版）
+- 支持 Web-UI 设置服务器地址
+- 支持长按拖动
 
 ## YT-DLP 服务器使用说明
 
