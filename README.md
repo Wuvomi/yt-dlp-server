@@ -1,6 +1,3 @@
-- `YT-DLPServerPush.user.js`: 游猴推送脚本
-- `yt_dlp_server.py`: 主程序
-
 ## 注意！运行环境要求
 - Python 3.6 或更高版本
 - Flask: `pip install Flask`
@@ -40,5 +37,8 @@
 - Flask-SocketIO: `pip install Flask-SocketIO`
 - requests: `pip install requests`
 - yt-dlp: `pip install yt-dlp`
+
+- `YT-DLPServerPush.user.js`: 游猴推送脚本
+- `yt_dlp_server.py`: 主程序
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
