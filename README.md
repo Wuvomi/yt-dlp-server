@@ -16,11 +16,11 @@
 - 支持记录推送日志
 - 支持带 Cookie 下载（YouTube 频道会员视频）
 
-## YT-DLP 服务器使用说明
-
 ## 文件列表
 - `YT-DLPServerPush.user.js`: 游猴推送脚本
 - `yt_dlp_server.py`: 主程序
+
+## YT-DLP 服务器使用说明
 
 ### 命令行参数
 使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 5000`
