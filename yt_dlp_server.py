@@ -57,16 +57,7 @@ def setup_logging():
 
     return push_logger
 
-
-if sys.version_info < (3, 6):
-    print("错误：您当前使用的 Python 版本低于 3.6。")
-    print("请更新到最新版本的 Python。建议使用 pyenv 进行 Python 安装和管理。")
-    print("\n使用 pyenv 的一些常用命令：")
-    print("查看当前已安装的所有版本：pyenv versions")
-    print("安装指定的 Python 版本：pyenv install <version>")
-    print("卸载指定的 Python 版本：pyenv uninstall <version>")
-    print("设置全局 Python 版本：pyenv global <version>")
-    sys.exit(1)
+args = None
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -77,74 +68,44 @@ index_template = '''
 <html>
 <head>
     <title>YT-DLP 服务器</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        textarea {
-            width: 100%;
-            height: 100px;
-            resize: none;
-        }
-        pre {
-            white-space: pre-wrap;
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 0.9;
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
 <body>
     <h1>YT-DLP 服务器</h1>
-    <form id="download-form">
-        <textarea id="url" name="url" placeholder="输入视频网址，每行一个"></textarea>
-        <input type="text" id="cookie" name="cookie" placeholder="输入cookie（可选）">
-        <button type="submit">下载</button>
-    </form>
-    <pre id="output"></pre>
-    <script>
-        const socket = io();
-
-        socket.on('output', (data) => {
-            $('#output').append(`${data}\\n`);
-        });
-
-        $('#download-form').submit((e) => {
-            e.preventDefault();
-            const urls = $('#url').val().split('\\n');
-            const cookie = $('#cookie').val();
-            urls.forEach((url) => {
-                if (url.trim()) {
-                    $.post('/download', { url: url.trim(), cookie: cookie });
-                }
-            });
-            $('#url').val('');
-            $('#cookie').val('');
-        });
-    </script>
+    <p>当前监听地址：{{ host }}</p>
+    <p>当前监听端口：{{ port }}</p>
+    <p>当前下载目录：{{ download_dir }}</p>
+    <p>通过 GET 方式提交下载：http://{{ request_host }}:{{ port }}/download?url=https://www.example.com/video-url</p>
 </body>
 </html>
 '''
 
 @app.route('/')
 def index():
-    return render_template_string(index_template)
+    request_host = request.headers.get('Host').split(':')[0]
+    return render_template_string(index_template, host=args.host, request_host=request_host, port=args.port, download_dir=args.download_dir)
 
 
-def download_video(url, cookie, socketio):
+def download_video(url, cookie, socketio, output_directory):
     try:
-        output_directory = 'downloads'
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
 
         host = urlparse(url).netloc
 
         if cookie:
-            # 保存 Cookie 到文件
             with open("saved_cookies.txt", "w") as cookie_file:
                 cookie_file.write(f"Host: {host}\n")
                 cookie_file.write(f"Cookie: {cookie}\n")
 
-            # 调用 convert_to_netscape 函数
             convert_to_netscape()
-
-            # 使用 cookies.txt 下载视频
             cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16', '--cookies', 'cookies.txt']
         else:
             cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16']
@@ -167,11 +128,11 @@ def download_video(url, cookie, socketio):
 
 download_queue = queue.Queue()
 
-def download_thread(socketio):
+def download_thread(socketio, output_directory):
     while True:
         url, cookie, socketio = download_queue.get()
         push_logger.info(f"{url}")
-        download_video(url, cookie, socketio)
+        download_video(url, cookie, socketio, output_directory)
 
 @app.route('/download', methods=['GET', 'POST'])
 def download():
@@ -180,29 +141,29 @@ def download():
     if not url:
         return '需要提供网址', 400
 
-    # 在将下载任务添加到队列之前记录日志
     push_logger.info(f"{url}")
-
-    # 将下载任务添加到队列，而不是在此处立即下载
     download_queue.put((url, cookie, socketio))
     return '下载任务已添加', 200
 
-
 def main():
+    global args
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--host', default='0.0.0.0', help='设置监听地址（默认：0.0.0.0）')
     parser.add_argument('-p', '--port', type=int, default=5000, help='设置监听端口（默认：5000）')
+    parser.add_argument('-d', '--download-dir', default='downloads', help='设置下载目录（默认：downloads）')
     args = parser.parse_args()
 
     print("YT-DLP 服务器使用说明：")
     print("-l, --host 设置监听地址（默认：0.0.0.0）")
     print("-p, --port 设置监听端口（默认：5000）")
-    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 5000")
+    print("-d, --download-dir 设置下载目录（默认：downloads）")
+    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 5000 -d downloads")
 
     print(f"\n当前监听地址：{args.host}")
     print(f"当前监听端口：{args.port}")
+    print(f"当前下载目录：{args.download_dir}")
 
-    threading.Thread(target=download_thread, args=(socketio,), daemon=True).start()
+    threading.Thread(target=download_thread, args=(socketio, args.download_dir), daemon=True).start()
     socketio.run(app, host=args.host, port=args.port)
 
 if __name__ == '__main__':
