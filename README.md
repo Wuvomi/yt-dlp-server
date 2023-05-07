@@ -4,6 +4,7 @@
 - Python 3.6 或更高版本
 - Flask: `pip install Flask`
 - Flask-SocketIO: `pip install Flask-SocketIO`
+- eventlet: `pip install eventlet`
 - requests: `pip install requests`
 - yt-dlp: `pip install yt-dlp`
 
