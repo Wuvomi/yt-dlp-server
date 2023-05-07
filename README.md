@@ -11,6 +11,7 @@
 ## 文件列表
 - `YT-DLPServerPush.user.js`: 游猴推送脚本
 - `yt_dlp_server.py`: 主程序
+- `运行环境检测.bat`: 适用于Windows的运行环境检测脚本
 
 ## 功能介绍
 
