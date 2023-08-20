@@ -45,4 +45,6 @@
 
   使用表单，`url=https://www.example.com/video`，`cookie=xxx`（可选，请把 JSON 抓包的头部 Cookie 写入参数，程序会自动转换为 Netscape 格式并保存至 `cookies.txt`）
 
+  docker项目地址：https://registry.hub.docker.com/r/wuvomi/yt_dlp_server/
+
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
