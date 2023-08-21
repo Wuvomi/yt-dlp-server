@@ -166,7 +166,7 @@ def main():
 
     print("YT-DLP 服务器使用说明：")
     print("-l, --host 设置监听地址（默认：0.0.0.0）")
-    print("-p, --port 设置监听端口（默认：5000）")
+    print("-p, --port 设置监听端口（默认：5222）")
     print("-d, --download-dir 设置下载目录（默认：downloads）")
     print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 5000 -d downloads")
 
