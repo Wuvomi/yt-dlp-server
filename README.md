@@ -48,5 +48,7 @@
   docker项目地址：https://registry.hub.docker.com/r/wuvomi/yt_dlp_server/
   增加IPv6支持
   增加docker配置文件
+  在宿主机上确保给这个脚本执行权限：
+chmod +x entrypoint.sh
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
