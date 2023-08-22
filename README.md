@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ## 功能介绍
 
 
-### yt_dlp_server.py
+
 - 支持主流网站如YouTube、91（其他网站可以自行尝试）
 - 支持通过API提交下载请求
 - 默认使用16个线程进行暴力下载
@@ -29,26 +29,25 @@ pip install -r requirements.txt
 - 下载日志链接会被保存
 - 支持多任务并行下载
 
-### YT-DLPServerPush.user.js
-- 支持 Web-UI 设置服务器地址
-- 支持长按拖动
+
+- 支持游猴脚本（提供Web-UI 设置服务器地址）
 
 
 - 支持IPv6
-- 提供Docker配置文件
+- 提供Docker生成配置文件
 - 在Docker宿主机上，需要确保给`start.sh`脚本赋予执行权限
 
 
 ## 使用说明
 
-### YT-DLP 服务器命令行参数
+
 使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 5000`
 
 - `-l, --host` 设置监听地址（默认：0.0.0.0）
 - `-p, --port` 设置监听端口（默认：5000）
 - `-d, --dir` 设置下载目录路径（默认：download）
 
-### 网络请求
+
 - GET 提交方式：`http://127.0.0.1:5000/download?url=https://www.example.com/video`
 - POST 提交方式：`http://127.0.0.1:5000/download`
 
