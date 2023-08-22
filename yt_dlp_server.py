@@ -81,7 +81,7 @@ index_template = '''
     <h1>YT-DLP 服务器</h1>
     <p>当前监听地址：{{ host }}</p>
     <p>当前监听端口：{{ port }}</p>
-    <p>当前下载目录：{{ download_dir }}</p>
+    <p>当前下载目录：{{ dir }}</p>
     <p>通过 GET 方式提交下载：http://{{ request_host }}:{{ port }}/download?url=https://www.example.com/video-url</p>
 </body>
 </html>
@@ -89,8 +89,13 @@ index_template = '''
 
 @app.route('/')
 def index():
+    
+    display_host = args.host
+    if display_host == '::':
+        display_host = '0.0.0.0'
+
     request_host = request.headers.get('Host').split(':')[0]
-    return render_template_string(index_template, host=args.host, request_host=request_host, port=args.port, download_dir=args.download_dir)
+    return render_template_string(index_template, host=args.host, request_host=request_host, port=args.port, dir=args.dir)
 
 
 def download_video(url, cookie, socketio, output_directory):
@@ -166,9 +171,9 @@ def main():
 
     print(f"\n当前监听地址：{args.host}")
     print(f"当前监听端口：{args.port}")
-    print(f"当前下载目录：{args.download_dir}")
+    print(f"当前下载目录：{args.dir}")
 
-    threading.Thread(target=download_thread, args=(socketio, args.download_dir), daemon=True).start()
+    threading.Thread(target=download_thread, args=(socketio, args.dir), daemon=True).start()
     socketio.run(app, host=args.host, port=args.port)
 
 if __name__ == '__main__':
