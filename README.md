@@ -9,13 +9,13 @@ YT-DLP Server 是基于 YT-DLP 的网页服务器版本，支持iOS快捷指令�
 ```
 pip install -r requirements.txt
 ```
-## 文件列表
 
-- `YT-DLPServerPush.user.js`: 游猴推送脚本
+## 文件列表
 - `yt_dlp_server.py`: 主程序
-- `运行环境检测.bat`: 适用于Windows的运行环境检测脚本
+- `YT-DLPServerPush.user.js`: 游猴脚本
 - `Dockerfile`: 用于构建和设置Docker容器的脚本
 - `start.sh`: 用于在Docker环境下通过获取环境变量来启动`yt_dlp_server.py`
+- `运行环境检测.bat`: 适用于Windows的运行环境检测脚本
 
 ## 功能介绍
 
@@ -24,9 +24,9 @@ pip install -r requirements.txt
 - 支持主流网站如YouTube、91（其他网站可以自行尝试）
 - 支持通过API提交下载请求
 - 默认使用16个线程进行暴力下载
-- 具备Docker支持
+-
 - 支持IPv6
-- 下载日志链接会被保存
+- 支持下载链接日志
 - 支持多任务并行下载
 
 
