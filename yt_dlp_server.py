@@ -153,7 +153,7 @@ def main():
     parser.add_argument('-p', '--port', type=int, default=7777, help='设置监听端口（默认：7777）')
     parser.add_argument('-d', '--download-dir', default='downloads', help='设置下载目录（默认：downloads）')
     parser.add_argument('-6', '--ipv6', action='store_true', help='使用IPv6监听（默认使用IPv4）')
-    parser.add_argument('--diy', default='', help='自定义yt-dlp命令行参数。')  # 新增--diy参数
+    parser.add_argument('--diy', default='', help='允许添加自定义yt-dlp启动参数。例如，可以通过增加"--all-subs"参数来下载所有字幕。')
     args = parser.parse_args()
 
     # 根据IPv6选项设置监听地址
@@ -163,15 +163,23 @@ def main():
         args.host = '0.0.0.0'
 
     print("YT-DLP 服务器使用说明：")
-    print("-l, --host 设置监听地址（默认：0.0.0.0）")
-    print("-p, --port 设置监听端口（默认：7777）")
-    print("-d, --download-dir 设置下载目录（默认：downloads）")
-    print("--diy 自定义yt-dlp命令行参数。")  # 新增说明
-    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d downloads --diy \"--all-subs\"")
+    print("  -l, --host            设置监听地址（默认：0.0.0.0）")
+    print("  -p, --port            设置监听端口（默认：7777）")
+    print("  -d, --download-dir    设置下载目录（默认：downloads）")
+    print("  --diy                 允许添加自定义yt-dlp启动参数。例如，可以通过增加'--all-subs'参数来下载所有字幕。")
+    print()
+    print("常规启动示例：")
+    print("  python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d downloads")
+    print()
+    print("带自定义yt-dlp参数启动示例（如下载所有字幕）：")
+    print("  python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d downloads --diy=\"--all-subs\"")
 
     print(f"\n当前监听地址：{args.host}")
     print(f"当前监听端口：{args.port}")
     print(f"当前下载目录：{args.download_dir}")
+        # 如果用户指定了自定义参数，显示这些参数
+    if args.diy:
+        print(f"自定义参数：{args.diy}")
 
     threading.Thread(target=download_thread, args=(socketio, args.download_dir), daemon=True).start()
     socketio.run(app, host=args.host, port=args.port)
