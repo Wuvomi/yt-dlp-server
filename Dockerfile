@@ -9,6 +9,16 @@ COPY yt_dlp_server.py .
 COPY start.sh .
 COPY requirements.txt .
 
+# 设置start.sh执行权限
+RUN chmod +x start.sh
+
+# 更新包列表并安装 nano
+RUN apt-get update && \
+    apt-get install -y nano && \
+    # 清理缓存，减小镜像体积
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # 安装 Python 依赖
 RUN pip install --no-cache-dir -r requirements.txt
 
