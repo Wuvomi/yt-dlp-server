@@ -36,13 +36,27 @@ pip install -r requirements.txt
 
 ## 使用说明
 
+使用以下命令启动服务器：
 
-使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 7777`
+python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d download –diy=”–all-subs”
+
+### 选项说明：
 
 - `-l, --host` 设置监听地址（默认：0.0.0.0）
 - `-p, --port` 设置监听端口（默认：7777）
-- `-d, --dir` 设置下载目录路径（默认：download）
-- `-6, --ipv6` 设置监听IPv6地址（默认：IPv4的0.0.0.0）
+- `-d, --dir` 设置下载目录路径（默认：download）。例如，使用 `-d /path/to/your/download` 来指定自定义下载目录。
+- `-6, --ipv6` 使用此选项以设置监听IPv6地址，不需要值。默认情况下监听IPv4的0.0.0.0。
+- `--diy` 允许添加自定义yt-dlp启动参数。例如，可以通过增加 `--diy="--all-subs"` 参数来下载所有字幕。
+
+### 示例：
+
+- 启动服务器，不带任何自定义yt-dlp参数：
+
+python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d download
+
+- 启动服务器，并使用自定义yt-dlp参数（如下载所有字幕）：
+
+python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d download –diy=”–all-subs”
 
 
 - GET 提交方式：`http://127.0.0.1:7777/download?url=https://www.example.com/video`
