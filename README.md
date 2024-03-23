@@ -36,15 +36,16 @@ pip install -r requirements.txt
 ## 使用说明
 
 
-使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 5000`
+使用以下命令启动服务器：`python yt_dlp_server.py -l 0.0.0.0 -p 6666`
 
 - `-l, --host` 设置监听地址（默认：0.0.0.0）
-- `-p, --port` 设置监听端口（默认：5000）
+- `-p, --port` 设置监听端口（默认：6666）
 - `-d, --dir` 设置下载目录路径（默认：download）
+- `-6, --ipv6` 设置监听IPv6地址（默认：IPv4的0.0.0.0）
 
 
-- GET 提交方式：`http://127.0.0.1:5000/download?url=https://www.example.com/video`
-- POST 提交方式：`http://127.0.0.1:5000/download`
+- GET 提交方式：`http://127.0.0.1:6666/download?url=https://www.example.com/video`
+- POST 提交方式：`http://127.0.0.1:6666/download`
 
 使用表单，`url=https://www.example.com/video`，`cookie=xxx`（可选，请把 JSON 抓包的头部 Cookie 写入参数，程序会自动转换为 Netscape 格式并保存至 `cookies.txt`）
 
