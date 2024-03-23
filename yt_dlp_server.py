@@ -23,6 +23,7 @@ def convert_to_netscape():
 
     # 将 Cookie 转换为 Netscape 格式并保存到文件
     jar = http.cookiejar.MozillaCookieJar('cookies.txt')
+
     for cookie_name, cookie_value in cookies:
         cookie = http.cookiejar.Cookie(
             version=0,
@@ -48,7 +49,6 @@ def convert_to_netscape():
     jar.save(ignore_discard=True, ignore_expires=True)
 
 def setup_logging():
-    # 设置日志记录
     push_logger = logging.getLogger('push')
     push_logger.setLevel(logging.INFO)
     push_handler = logging.FileHandler('yt_dlp_push.log', encoding='utf-8')
@@ -92,6 +92,7 @@ def index():
     request_host = request.headers.get('Host').split(':')[0]
     return render_template_string(index_template, host=args.host, request_host=request_host, port=args.port, download_dir=args.download_dir)
 
+
 def download_video(url, cookie, socketio, output_directory):
     try:
         if not os.path.exists(output_directory):
@@ -105,9 +106,9 @@ def download_video(url, cookie, socketio, output_directory):
                 cookie_file.write(f"Cookie: {cookie}\n")
 
             convert_to_netscape()
-            cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16', '--cookies', 'cookies.txt'] + args.diy.split()
+            cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16', '--cookies', 'cookies.txt']
         else:
-            cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16'] + args.diy.split()
+            cmd = ['yt-dlp', '-o', f'{output_directory}/%(title)s-%(id)s.%(ext)s', url, '--newline', '--concurrent-fragments', '16']
 
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
@@ -130,7 +131,7 @@ download_queue = queue.Queue()
 def download_thread(socketio, output_directory):
     while True:
         url, cookie, socketio = download_queue.get()
-        push_logger.info(f"开始下载：{url}")
+        push_logger.info(f"{url}")
         download_video(url, cookie, socketio, output_directory)
 
 @app.route('/download', methods=['GET', 'POST'])
@@ -140,19 +141,36 @@ def download():
     if not url:
         return '需要提供网址', 400
 
-    push_logger.info(f"添加下载任务：{url}")
+    push_logger.info(f"{url}")
     download_queue.put((url, cookie, socketio))
     return '下载任务已添加', 200
 
 def main():
     global args
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', '-l', default='0.0.0.0', help='设置监听地址（默认：0.0.0.0）')
-    parser.add_argument('--port', '-p', type=int, default=7777, help='设置监听端口（默认：7777）')
-    parser.add_argument('--download-dir', '-d', default='downloads', help='设置下载目录（默认：downloads）')
-    parser.add_argument('--ipv6', '-6', action='store_true', help='使用IPv6监听（默认使用IPv4）')
-    parser.add_argument('--diy', default='', help='自定义yt-dlp命令行参数（空格分隔）。')
+    parser.add_argument('-l', '--host', default='0.0.0.0', help='设置监听地址（默认：0.0.0.0）')
+    parser.add_argument('-p', '--port', type=int, default=7777, help='设置监听端口（默认：7777）')
+    parser.add_argument('-d', '--download-dir', default='downloads', help='设置下载目录（默认：downloads）')
+    parser.add_argument('-6', '--ipv6', action='store_true', help='使用IPv6监听（默认使用IPv4）')
+    parser.add_argument('--diy', default='', help='自定义yt-dlp命令行参数。')  # 新增--diy参数
     args = parser.parse_args()
+
+    # 根据IPv6选项设置监听地址
+    if args.ipv6:
+        args.host = '::'
+    else:
+        args.host = '0.0.0.0'
+
+    print("YT-DLP 服务器使用说明：")
+    print("-l, --host 设置监听地址（默认：0.0.0.0）")
+    print("-p, --port 设置监听端口（默认：7777）")
+    print("-d, --download-dir 设置下载目录（默认：downloads）")
+    print("--diy 自定义yt-dlp命令行参数。")  # 新增说明
+    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d downloads --diy \"--all-subs\"")
+
+    print(f"\n当前监听地址：{args.host}")
+    print(f"当前监听端口：{args.port}")
+    print(f"当前下载目录：{args.download_dir}")
 
     threading.Thread(target=download_thread, args=(socketio, args.download_dir), daemon=True).start()
     socketio.run(app, host=args.host, port=args.port)
