@@ -149,7 +149,7 @@ def main():
     global args
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--host', default='0.0.0.0', help='设置监听地址（默认：0.0.0.0）')
-    parser.add_argument('-p', '--port', type=int, default=6666, help='设置监听端口（默认：6666）')
+    parser.add_argument('-p', '--port', type=int, default=7777, help='设置监听端口（默认：7777）')
     parser.add_argument('-d', '--download-dir', default='downloads', help='设置下载目录（默认：downloads）')
     parser.add_argument('-6', '--ipv6', action='store_true', help='使用IPv6监听（默认使用IPv4）')
     
@@ -163,9 +163,9 @@ def main():
 
     print("YT-DLP 服务器使用说明：")
     print("-l, --host 设置监听地址（默认：0.0.0.0）")
-    print("-p, --port 设置监听端口（默认：6666）")
+    print("-p, --port 设置监听端口（默认：7777）")
     print("-d, --download-dir 设置下载目录（默认：downloads）")
-    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 6666 -d downloads")
+    print("示例：python yt_dlp_server.py -l 0.0.0.0 -p 7777 -d downloads")
 
     print(f"\n当前监听地址：{args.host}")
     print(f"当前监听端口：{args.port}")

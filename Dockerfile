@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 设置默认环境变量
 ENV HOST=0.0.0.0
 ENV DIR=/downloads
-ENV PORT=5222
+ENV PORT=7777
 
 # 设置启动脚本为 entrypoint
 ENTRYPOINT ["./start.sh"]
