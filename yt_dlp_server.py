@@ -49,6 +49,7 @@ def convert_to_netscape():
     jar.save(ignore_discard=True, ignore_expires=True)
 
 def setup_logging():
+    # 设置日志记录
     push_logger = logging.getLogger('push')
     push_logger.setLevel(logging.INFO)
     push_handler = logging.FileHandler('yt_dlp_push.log', encoding='utf-8')
@@ -131,7 +132,7 @@ download_queue = queue.Queue()
 def download_thread(socketio, output_directory):
     while True:
         url, cookie, socketio = download_queue.get()
-        push_logger.info(f"{url}")
+        push_logger.info(f"开始下载：{url}")
         download_video(url, cookie, socketio, output_directory)
 
 @app.route('/download', methods=['GET', 'POST'])
@@ -141,7 +142,7 @@ def download():
     if not url:
         return '需要提供网址', 400
 
-    push_logger.info(f"{url}")
+    push_logger.info(f"添加下载任务：{url}")
     download_queue.put((url, cookie, socketio))
     return '下载任务已添加', 200
 
