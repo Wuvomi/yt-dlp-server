@@ -2,6 +2,7 @@
 
 YT-DLP Server 是基于 YT-DLP 的网页服务器版本，支持iOS快捷指令进行远程推送。
 
+![icon.png](https://raw.githubusercontent.com/Wuvomi/yt-dlp-server/main/icon.png)
 
 ## 环境要求
 - Python 3.6 或更高版本
@@ -52,3 +53,4 @@ pip install -r requirements.txt
 docker项目地址：https://registry.hub.docker.com/r/wuvomi/yt_dlp_server/
 
 ![IMG_7061](https://user-images.githubusercontent.com/7725643/233867727-1955b068-3d30-461b-9922-5e218effb581.jpeg)
+
